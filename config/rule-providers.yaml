@@ -1,6 +1,6 @@
-# 轻量版 rule-providers：去广告改用 oisd small（5.6 万条 / 2.1MB），适合内存小的路由器
-# 与完整版的区别：仅把 adguard_block 换成 oisd_small；白名单 adguard_allow 保留。
-# 用法：二选一使用本文件或 rule-providers.yaml，不要同时用。
+# 默认配置（轻量）：去广告黑名单用 oisd small（5.6 万条 / 2.1MB），适合小内存路由器
+# 内存充足时可用 config/rule-providers-full.yaml（黑名单为 adguard_block，10.7MB/27万条）
+# 用法：二选一使用本文件或 rule-providers-full.yaml，不要同时用。
 
 rule-providers:
   # ---- 去广告白名单：AyraHikari/openclash_adguard ----
