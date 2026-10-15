@@ -1,0 +1,45 @@
+# 即插即用的 rule-providers 与 rules 片段
+# 用法：把 rule-providers 段合并进 OpenClash 配置文件的 rule-providers；
+# 把 rules 段的三条按顺序加到 rules 列表靠前的位置（顺序很重要）。
+
+rule-providers:
+  # ---- 去广告：AyraHikari/openclash_adguard ----
+  # AdGuard / EasyList 转成的 Clash 规则，上游每 12 小时自动更新。
+  # 注意：OpenClash 不支持单个规则集内放行例外，所以 allow 必须在 block 之前引用。
+  adguard_allow:
+    type: http
+    behavior: classical
+    path: ./ruleset/adguard_allow.yaml
+    url: https://raw.githubusercontent.com/AyraHikari/openclash_adguard/main/rules/adguard_allow.yaml
+    interval: 43200
+  adguard_block:
+    type: http
+    behavior: classical
+    path: ./ruleset/adguard_block.yaml
+    url: https://raw.githubusercontent.com/AyraHikari/openclash_adguard/main/rules/adguard_block.yaml
+    interval: 43200
+
+  # ---- AI 专项：rorojiao/clash_rules ----
+  # 50+ 家 AI 服务域名规则（ChatGPT / Claude / Gemini / Grok / Cursor 等），每天自动更新。
+  # 注意：该文件 payload 实际为 classical 格式（条目带 DOMAIN-SUFFIX 前缀），
+  # 必须用 behavior: classical；若按上游 README 写成 domain 会导致整行被当成纯域名、永远匹配不上。
+  ai-services:
+    type: http
+    behavior: classical
+    path: ./ruleset/ai-services.yaml
+    url: https://raw.githubusercontent.com/rorojiao/clash_rules/master/rules/ai-services.yaml
+    interval: 86400
+
+rules:
+  # 顺序：先放行广告白名单，再拦截广告，最后 AI 流量进 AI 分组
+  - RULE-SET,adguard_allow,DIRECT
+  - RULE-SET,adguard_block,REJECT
+  - RULE-SET,ai-services,AI服务
+
+# ---- 如配置里没有 AI服务 分组，取消下面注释（Aethersailor 底座模板自带的可跳过） ----
+# proxy-groups:
+#   - name: AI服务
+#     type: select
+#     proxies:
+#       - 自动选择
+#       - DIRECT

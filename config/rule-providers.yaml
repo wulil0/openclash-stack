@@ -1,0 +1,42 @@
+# 轻量版 rule-providers：去广告改用 oisd small（5.6 万条 / 2.1MB），适合内存小的路由器
+# 与完整版的区别：仅把 adguard_block 换成 oisd_small；白名单 adguard_allow 保留。
+# 用法：二选一使用本文件或 rule-providers.yaml，不要同时用。
+
+rule-providers:
+  # ---- 去广告白名单：AyraHikari/openclash_adguard ----
+  adguard_allow:
+    type: http
+    behavior: classical
+    path: ./ruleset/adguard_allow.yaml
+    url: https://raw.githubusercontent.com/AyraHikari/openclash_adguard/main/rules/adguard_allow.yaml
+    interval: 43200
+
+  # ---- 去广告黑名单（轻量）：hillz2/openclash_adblock 的 oisd small ----
+  # 每天自动更新；约 5.6 万条 / 2.1MB，AX3000（256MB 内存）无压力
+  oisd_small:
+    type: http
+    behavior: classical
+    path: ./ruleset/oisd_small.yaml
+    url: https://raw.githubusercontent.com/hillz2/openclash_adblock/main/oisd_small.yaml
+    interval: 86400
+
+  # ---- AI 专项：rorojiao/clash_rules（同完整版） ----
+  ai-services:
+    type: http
+    behavior: classical
+    path: ./ruleset/ai-services.yaml
+    url: https://raw.githubusercontent.com/rorojiao/clash_rules/master/rules/ai-services.yaml
+    interval: 86400
+
+rules:
+  - RULE-SET,adguard_allow,DIRECT
+  - RULE-SET,oisd_small,REJECT
+  - RULE-SET,ai-services,AI服务
+
+# ---- 如配置里没有 AI服务 分组，取消下面注释 ----
+# proxy-groups:
+#   - name: AI服务
+#     type: select
+#     proxies:
+#       - 自动选择
+#       - DIRECT

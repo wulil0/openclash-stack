@@ -1,0 +1,39 @@
+# 覆写示例：在 Aethersailor 覆写基础上叠加本方案
+# 用法：OpenClash → 覆写设置 → 远程覆写，引用你自己的覆写文件 URL，
+# 把下面内容作为覆写文件主体（YAML anchors 写法兼容 Mihomo 内核）。
+
+# 1) 先引入底座覆写（Aethersailor 远程覆写二选一，按其 Wiki 取用其一）
+#    示例（以其 Wiki 给出的覆写地址为准，这里仅示意结构）：
+# yaml:
+#   prepend-rules:
+#     - RULE-SET,adguard_allow,DIRECT
+#     - RULE-SET,adguard_block,REJECT
+#     - RULE-SET,ai-services,AI服务
+#   append-rule-providers:
+#     adguard_allow:
+#       type: http
+#       behavior: classical
+#       path: ./ruleset/adguard_allow.yaml
+#       url: https://raw.githubusercontent.com/AyraHikari/openclash_adguard/main/rules/adguard_allow.yaml
+#       interval: 43200
+#     adguard_block:
+#       type: http
+#       behavior: classical
+#       path: ./ruleset/adguard_block.yaml
+#       url: https://raw.githubusercontent.com/AyraHikari/openclash_adguard/main/rules/adguard_block.yaml
+#       interval: 43200
+#     ai-services:
+#       type: http
+#       behavior: classical   # 文件实为 classical 格式，勿用 domain
+#       path: ./ruleset/ai-services.yaml
+#       url: https://raw.githubusercontent.com/rorojiao/clash_rules/master/rules/ai-services.yaml
+#       interval: 86400
+
+# 2) 确保 proxy-groups 里有 AI服务 分组（Aethersailor 模板自带 AI 分组的可直接复用）：
+# yaml:
+#   append-proxy-groups:
+#     - name: AI服务
+#       type: select
+#       proxies:
+#         - 自动选择
+#         - DIRECT
